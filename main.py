@@ -13,7 +13,7 @@ from flask import Flask, jsonify, request, abort
 
 
 JWT_SECRET = os.environ.get('JWT_SECRET', 'abc123abc1234')
-LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+LOG_LEVEL = os.environ.get('LOG_LEVEL', 'DEBUG')
 
 
 def _logger():
@@ -77,7 +77,6 @@ def auth():
         LOG.error("No password provided")
         return jsonify({"message": "Missing parameter: password"}, 400)
     body = {'email': email, 'password': password}
-
     user_data = body
 
     return jsonify(token=_get_jwt(user_data).decode('utf-8'))
@@ -96,7 +95,6 @@ def decode_jwt():
         data = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
     except: # pylint: disable=bare-except
         abort(401)
-
 
     response = {'email': data['email'],
                 'exp': data['exp'],
